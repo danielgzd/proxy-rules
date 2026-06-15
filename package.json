@@ -1,0 +1,13 @@
+{
+  "name": "proxy-rules",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/validate.mjs",
+    "stats": "node scripts/stats.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
