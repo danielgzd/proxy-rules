@@ -29,7 +29,7 @@
 <!-- STATS:START -->
 | 策略组 | 路由规则 | 远程规则集 | 收录规则 | 过滤关键词 |
 | ---: | ---: | ---: | ---: | ---: |
-| 9 | 13 | 12 | 312,637 | 58 |
+| 9 | 13 | 12 | 312,878 | 58 |
 
 <details>
 <summary>查看各规则集统计</summary>
@@ -38,9 +38,9 @@
 | --- | --- | ---: |
 | `applications` | classical | 96 |
 | `private` | domain | 130 |
-| `reject` | domain | 165,955 |
-| `direct` | domain | 112,751 |
-| `proxy` | domain | 26,720 |
+| `reject` | domain | 166,285 |
+| `direct` | domain | 112,653 |
+| `proxy` | domain | 26,729 |
 | `lancidr` | ipcidr | 18 |
 | `cncidr` | ipcidr | 5,711 |
 | `telegramcidr` | ipcidr | 12 |
@@ -49,7 +49,7 @@
 | `global-media` | classical | 953 |
 | `github` | classical | 31 |
 
-统计更新时间：2026-06-17 08:38:27 UTC
+统计更新时间：2026-06-18 08:21:22 UTC
 </details>
 <!-- STATS:END -->
 
