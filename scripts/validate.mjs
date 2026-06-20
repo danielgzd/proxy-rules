@@ -1,7 +1,9 @@
 import {
+  LOON_CONFIG_PATH,
   OPENCLASH_CONFIG_PATH,
   fetchText,
   loadClashVergeConfig,
+  loadLoonConfig,
   loadOpenClashConfig,
 } from "./lib.mjs";
 
@@ -66,10 +68,43 @@ for (const group of openClash.groups) {
   }
 }
 
+const { config: loon, source: loonSource } = loadLoonConfig();
+const loonBuiltIns = new Set(["DIRECT", "REJECT"]);
+
+assert(loon.groups.size > 0, `${LOON_CONFIG_PATH} has no proxy groups`);
+assert(
+  !/ca-p12\s*=\s*\S{80,}/i.test(loonSource),
+  `${LOON_CONFIG_PATH} must not include a real MITM certificate`
+);
+assert(
+  !/token=(?!MOCK)[^,\s]+/i.test(loonSource),
+  `${LOON_CONFIG_PATH} must not include real subscription tokens`
+);
+
+for (const group of loon.groups.values()) {
+  for (const target of group.proxies) {
+    assert(
+      loonBuiltIns.has(target) ||
+        loon.groups.has(target) ||
+        loon.filters.has(target),
+      `Loon ${group.name} references unknown policy: ${target}`
+    );
+  }
+}
+
+for (const rule of loon.remoteRules) {
+  assert(Boolean(rule.policy), `Loon remote rule missing policy: ${rule.url}`);
+  assert(
+    loonBuiltIns.has(rule.policy) || loon.groups.has(rule.policy),
+    `Loon remote rule references unknown policy: ${rule.policy}`
+  );
+}
+
 const urls = [
   ...Object.values(providers).map((provider) => provider.url),
   ...clashGroups.map((group) => group.icon).filter(Boolean),
   ...openClash.remoteRules.map((rule) => rule.url),
+  ...loon.remoteRules.map((rule) => rule.url),
 ];
 
 const checks = await Promise.allSettled(urls.map((url) => fetchText(url)));
@@ -88,5 +123,6 @@ console.log(
   `Validated Clash Verge Rev (${clashGroups.length} groups, ` +
     `${clashRules.length} rules, ${Object.keys(providers).length} providers) ` +
     `and OpenClash (${openClash.groups.length} groups, ` +
-    `${openClash.rules.length} rules, ${openClash.remoteRules.length} remote rulesets).`
+    `${openClash.rules.length} rules, ${openClash.remoteRules.length} remote rulesets), ` +
+    `and Loon (${loon.groups.size} groups, ${loon.remoteRules.length} remote rulesets).`
 );

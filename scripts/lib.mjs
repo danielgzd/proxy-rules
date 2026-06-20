@@ -3,6 +3,7 @@ import vm from "node:vm";
 
 export const CLASH_VERGE_CONFIG_PATH = "Clash/ClashVergeRev.js";
 export const OPENCLASH_CONFIG_PATH = "Clash/OpenClashFineRouting.ini";
+export const LOON_CONFIG_PATH = "Loon/Default.lcf";
 
 export function loadClashVergeConfig() {
   const source = fs.readFileSync(CLASH_VERGE_CONFIG_PATH, "utf8");
@@ -73,6 +74,64 @@ export function parseOpenClashIni(source) {
   }
 
   return { exclude, groups, remoteRules, rules };
+}
+
+export function loadLoonConfig() {
+  const source = fs.readFileSync(LOON_CONFIG_PATH, "utf8");
+  return { config: parseLoonConfig(source), source };
+}
+
+export function parseLoonConfig(source) {
+  const sections = {};
+  let current = null;
+
+  for (const rawLine of source.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith("#")) continue;
+
+    const sectionMatch = line.match(/^\[([^\]]+)\]$/);
+    if (sectionMatch) {
+      current = sectionMatch[1];
+      sections[current] ||= [];
+      continue;
+    }
+
+    if (current) sections[current].push(line);
+  }
+
+  const groups = new Map();
+  for (const line of sections["Proxy Group"] || []) {
+    const separator = line.indexOf("=");
+    if (separator === -1) continue;
+    const namePart = line.slice(0, separator);
+    const bodyPart = line.slice(separator + 1);
+    const name = namePart.trim();
+    const parts = bodyPart.split(",").map((part) => part.trim());
+    const type = parts.shift();
+    const proxies = parts.filter((part) => !part.includes("="));
+    groups.set(name, { name, type, proxies });
+  }
+
+  const filters = new Set();
+  for (const line of sections["Remote Filter"] || []) {
+    const separator = line.indexOf("=");
+    if (separator !== -1) filters.add(line.slice(0, separator).trim());
+  }
+
+  const remoteRules = [];
+  for (const line of sections["Remote Rule"] || []) {
+    const [url, ...parts] = line.split(",").map((part) => part.trim());
+    if (!url?.startsWith("http")) continue;
+    const policy = parts
+      .find((part) => part.startsWith("policy="))
+      ?.slice("policy=".length);
+    const tag = parts
+      .find((part) => part.startsWith("tag="))
+      ?.slice("tag=".length);
+    remoteRules.push({ url, policy, tag });
+  }
+
+  return { filters, groups, remoteRules, sections };
 }
 
 export async function fetchText(url) {

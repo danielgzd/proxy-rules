@@ -7,7 +7,7 @@
 
 个人代理工具规则与配置集合，按客户端分类维护。
 
-当前包含 Clash Verge Rev 扩展脚本和 OpenClash/subconverter 自定义模板，后续可继续增加 Loon、Shadowrocket 等工具。
+当前包含 Clash Verge Rev 扩展脚本、OpenClash/subconverter 自定义模板和 Loon 配置模板，后续可继续增加 Shadowrocket 等工具。
 
 ## Clash
 
@@ -22,6 +22,11 @@
 - [`Clash/ClashVergeRev.js`](Clash/ClashVergeRev.js)：Clash Verge Rev 扩展脚本。
 - [`Clash/OpenClashFineRouting.ini`](Clash/OpenClashFineRouting.ini)：OpenClash/subconverter 精细分流模板。
 - [`Clash/README.md`](Clash/README.md)：安装方法和策略组说明。
+
+## Loon
+
+- [`Loon/Default.lcf`](Loon/Default.lcf)：Loon 精简分流模板，订阅和个人节点均使用 mock 占位。
+- [`Loon/README.md`](Loon/README.md)：替换方法和策略组说明。
 
 ## 数据统计
 

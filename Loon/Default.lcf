@@ -1,0 +1,121 @@
+# Loon Default Rules
+# Replace only the MOCK values in [Proxy] and [Remote Proxy].
+# Personal subscriptions, node secrets, MITM certificates and private scripts are intentionally omitted.
+
+[General]
+ip-mode = dual
+ipv6-vif = auto
+sni-sniffing = true
+disable-stun = true
+dns-reject-mode = LoopbackIP
+domain-reject-mode = DNS
+udp-fallback-mode = DIRECT
+allow-wifi-access = false
+interface-mode = auto
+test-timeout = 8
+internet-test-url = http://connectivitycheck.platform.hicloud.com/generate_204
+proxy-test-url = https://www.gstatic.com/generate_204
+dns-server = system,223.5.5.5,119.29.29.29,114.114.114.114,1.1.1.1,8.8.8.8
+real-ip = msftconnecttest.com,msftncsi.com,*.msftconnecttest.com,*.msftncsi.com,*.apple.com,*.icloud.com,mesu.apple.com,swscan.apple.com,swquery.apple.com,swdownload.apple.com,swcdn.apple.com,swdist.apple.com
+skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local
+bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.168.0.0/16,224.0.0.0/4,255.255.255.255/32
+disconnect-on-policy-change = false
+resource-parser = https://raw.githubusercontent.com/sub-store-org/Sub-Store/master/config/Loon.plugin
+geoip-url = https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat
+ipasn-url = https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb
+
+[Proxy]
+# MOCK manual node. Replace with your own emergency node, or remove this line.
+MOCK-HYSTERIA2 = Hysteria2,example.com,443,"MOCK_PASSWORD",sni=example.com,skip-cert-verify=false,udp=true
+
+[Remote Proxy]
+# Replace these mock subscription URLs with your own airport subscriptions.
+# Keep parser-enabled=true only when your subscription needs parsing.
+主订阅 = https://example.com/sub?token=MOCK_MAIN_SUBSCRIPTION_TOKEN,parser-enabled=true,udp=true,block-quic=true,fast-open=default,vmess-aead=true,skip-cert-verify=false,enabled=true
+备用订阅 = https://example.com/sub?token=MOCK_BACKUP_SUBSCRIPTION_TOKEN,parser-enabled=true,udp=true,block-quic=true,fast-open=default,vmess-aead=true,skip-cert-verify=false,enabled=false
+
+[Remote Filter]
+# Region filters. Metadata nodes are excluded so traffic, expiry and notice entries do not pollute selectors.
+香港节点 = NameRegex, FilterKey="^(?=.*(?i)(香港|\\bHK\\b|Hong Kong|HongKong))(?!.*(?i)(剩余|流量|套餐|官网|网站|到期|重置|订阅|收藏|超时|通知|公告|客服|工单|倍率|Traffic|Expire|Subscription|Official|Website)).*$"
+台湾节点 = NameRegex, FilterKey="^(?=.*(?i)(台湾|台灣|\\bTW\\b|Taiwan|Taipei|Hinet))(?!.*(?i)(剩余|流量|套餐|官网|网站|到期|重置|订阅|收藏|超时|通知|公告|客服|工单|倍率|Traffic|Expire|Subscription|Official|Website)).*$"
+日本节点 = NameRegex, FilterKey="^(?=.*(?i)(日本|东京|東京|大阪|\\bJP\\b|Japan|Tokyo|Osaka))(?!.*(?i)(剩余|流量|套餐|官网|网站|到期|重置|订阅|收藏|超时|通知|公告|客服|工单|倍率|Traffic|Expire|Subscription|Official|Website)).*$"
+新加坡节点 = NameRegex, FilterKey="^(?=.*(?i)(新加坡|狮城|獅城|\\bSG\\b|Singapore))(?!.*(?i)(剩余|流量|套餐|官网|网站|到期|重置|订阅|收藏|超时|通知|公告|客服|工单|倍率|Traffic|Expire|Subscription|Official|Website)).*$"
+美国节点 = NameRegex, FilterKey="^(?=.*(?i)(美国|美國|\\bUS\\b|USA|United States|Los Angeles|San Jose|Seattle|New York|洛杉矶|洛杉磯|圣何塞|聖何塞|西雅图|西雅圖|纽约|紐約))(?!.*(?i)(剩余|流量|套餐|官网|网站|到期|重置|订阅|收藏|超时|通知|公告|客服|工单|倍率|Traffic|Expire|Subscription|Official|Website)).*$"
+冷门节点 = NameRegex, FilterKey="^(?!.*(?i)(香港|\\bHK\\b|Hong Kong|台湾|台灣|\\bTW\\b|Taiwan|日本|东京|東京|大阪|\\bJP\\b|Japan|新加坡|狮城|獅城|\\bSG\\b|Singapore|美国|美國|\\bUS\\b|USA|United States))(?!.*(?i)(剩余|流量|套餐|官网|网站|到期|重置|订阅|收藏|超时|通知|公告|客服|工单|倍率|Traffic|Expire|Subscription|Official|Website)).*$"
+全部节点 = NameRegex, FilterKey="^(?!.*(?i)(剩余|流量|套餐|官网|网站|到期|重置|订阅|收藏|超时|通知|公告|客服|工单|倍率|Traffic|Expire|Subscription|Official|Website)).*$"
+
+[Proxy Group]
+AI = select,美国节点,新加坡节点,日本节点,自动选择,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png
+节点选择 = select,自动选择,香港节点,台湾节点,日本节点,新加坡节点,美国节点,冷门节点,全部节点,DIRECT,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
+流媒体 = select,节点选择,香港节点,台湾节点,日本节点,新加坡节点,美国节点,冷门节点,自动选择,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Media.png
+开发服务 = select,节点选择,美国节点,新加坡节点,日本节点,香港节点,冷门节点,自动选择,DIRECT,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png
+社交媒体 = select,节点选择,日本节点,新加坡节点,美国节点,香港节点,冷门节点,自动选择,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png
+云与软件 = select,节点选择,DIRECT,香港节点,日本节点,新加坡节点,美国节点,冷门节点,自动选择,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png
+自动选择 = url-test,全部节点,url=https://www.gstatic.com/generate_204,interval=300,tolerance=80,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Auto.png
+兜底后备 = fallback,自动选择,香港节点,台湾节点,日本节点,新加坡节点,美国节点,冷门节点,interval=300,max-timeout=5000,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
+最终兜底 = select,节点选择,兜底后备,DIRECT,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
+
+[Rule]
+# Private and local traffic.
+DOMAIN,localhost,DIRECT
+DOMAIN-SUFFIX,local,DIRECT
+IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+
+# Domestic AI stays direct and must be placed before overseas AI rules.
+DOMAIN-SUFFIX,deepseek.com,DIRECT
+DOMAIN-SUFFIX,deepseek.cn,DIRECT
+DOMAIN-SUFFIX,kimi.moonshot.cn,DIRECT
+DOMAIN-SUFFIX,moonshot.cn,DIRECT
+DOMAIN-SUFFIX,doubao.com,DIRECT
+DOMAIN-SUFFIX,volces.com,DIRECT
+DOMAIN-SUFFIX,qwen.ai,DIRECT
+DOMAIN-SUFFIX,tongyi.aliyun.com,DIRECT
+DOMAIN-SUFFIX,baidu.com,DIRECT
+DOMAIN-SUFFIX,ernie.baidu.com,DIRECT
+DOMAIN-SUFFIX,zhipuai.cn,DIRECT
+DOMAIN-SUFFIX,chatglm.cn,DIRECT
+DOMAIN-SUFFIX,minimax.chat,DIRECT
+
+# App-specific fixes.
+DOMAIN-SUFFIX,voice.google.com,美国节点
+DOMAIN-SUFFIX,googletelephony.com,美国节点
+DOMAIN-SUFFIX,push.apple.com,DIRECT
+
+FINAL,最终兜底
+
+[Remote Rule]
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Lan/Lan.list, policy=DIRECT, tag=LAN, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Advertising/Advertising.list, policy=REJECT, tag=Advertising, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/China/China.list, policy=DIRECT, tag=China, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Apple/Apple.list, policy=DIRECT, tag=Apple, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/OpenAI/OpenAI.list, policy=AI, tag=OpenAI, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Gemini/Gemini.list, policy=AI, tag=Gemini, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Claude/Claude.list, policy=AI, tag=Claude, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Copilot/Copilot.list, policy=AI, tag=Copilot, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/GlobalMedia/GlobalMedia.list, policy=流媒体, tag=GlobalMedia, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Telegram/Telegram.list, policy=社交媒体, tag=Telegram, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/TikTok/TikTok.list, policy=社交媒体, tag=TikTok, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Twitter/Twitter.list, policy=社交媒体, tag=Twitter, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/GitHub/GitHub.list, policy=开发服务, tag=GitHub, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Google/Google.list, policy=云与软件, tag=Google, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Microsoft/Microsoft.list, policy=云与软件, tag=Microsoft, enabled=true
+
+[Host]
+
+[Rewrite]
+
+[Script]
+# Private cron jobs are intentionally omitted from the public template.
+
+[Remote Script]
+
+[Plugin]
+# Add personal plugins here after replacing the mock subscription.
+
+[Mitm]
+skip-server-cert-verify = false
+# MITM certificates and hostnames are intentionally omitted from the public template.

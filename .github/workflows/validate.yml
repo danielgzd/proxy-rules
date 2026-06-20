@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "Clash/**"
+      - "Loon/**"
       - "scripts/**"
       - "package.json"
       - ".github/workflows/**"
