@@ -4,6 +4,9 @@ import vm from "node:vm";
 export const CLASH_VERGE_CONFIG_PATH = "Clash/ClashVergeRev.js";
 export const OPENCLASH_CONFIG_PATH = "Clash/OpenClashFineRouting.ini";
 export const LOON_CONFIG_PATH = "Loon/Default.lcf";
+export const SHADOWROCKET_CONFIG_PATH = "Shadowrocket/Default.conf";
+export const QUANTUMULTX_CONFIG_PATH = "QuantumultX/Default.conf";
+export const SING_BOX_CONFIG_PATH = "sing-box/config.json";
 
 export function loadClashVergeConfig() {
   const source = fs.readFileSync(CLASH_VERGE_CONFIG_PATH, "utf8");
@@ -132,6 +135,17 @@ export function parseLoonConfig(source) {
   }
 
   return { filters, groups, remoteRules, sections };
+}
+
+export function extractHttpUrls(source) {
+  return [...source.matchAll(/https?:\/\/[^,\s"']+/g)].map((match) =>
+    match[0].replace(/[)\]]+$/, "")
+  );
+}
+
+export function loadTextConfig(path) {
+  const source = fs.readFileSync(path, "utf8");
+  return { source, urls: extractHttpUrls(source) };
 }
 
 export async function fetchText(url) {

@@ -114,7 +114,14 @@ https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/
 [Remote Script]
 
 [Plugin]
-# Add personal plugins here after replacing the mock subscription.
+# Loon is mainly used here for ad blocking, so keep a small public plugin set.
+# Remove app-specific plugins only when they break a workflow.
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rewrite/Loon/Advertising/Advertising.plugin, enabled=true
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rewrite/Loon/AdvertisingLite/AdvertisingLite.plugin, enabled=false
+https://raw.githubusercontent.com/app2smile/rules/master/plugin/youtube.plugin, enabled=true
+https://raw.githubusercontent.com/app2smile/rules/master/plugin/zhihu.plugin, enabled=true
+https://raw.githubusercontent.com/app2smile/rules/master/plugin/tieba.plugin, enabled=true
+https://raw.githubusercontent.com/app2smile/rules/master/plugin/bilibili.plugin, enabled=true
 
 [Mitm]
 skip-server-cert-verify = false

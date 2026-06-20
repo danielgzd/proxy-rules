@@ -1,7 +1,11 @@
 import {
   LOON_CONFIG_PATH,
+  QUANTUMULTX_CONFIG_PATH,
+  SHADOWROCKET_CONFIG_PATH,
+  SING_BOX_CONFIG_PATH,
   OPENCLASH_CONFIG_PATH,
   fetchText,
+  loadTextConfig,
   loadClashVergeConfig,
   loadLoonConfig,
   loadOpenClashConfig,
@@ -100,11 +104,48 @@ for (const rule of loon.remoteRules) {
   );
 }
 
+const additionalConfigs = [
+  SHADOWROCKET_CONFIG_PATH,
+  QUANTUMULTX_CONFIG_PATH,
+  SING_BOX_CONFIG_PATH,
+];
+const additionalUrls = [];
+
+for (const configPath of additionalConfigs) {
+  const { source, urls: configUrls } = loadTextConfig(configPath);
+  additionalUrls.push(
+    ...configUrls.filter(
+      (url) =>
+        !url.includes("example.com") &&
+        !url.endsWith("/dns-query")
+    )
+  );
+
+  assert(
+    !/token=(?!MOCK)[^,\s"']+/i.test(source),
+    `${configPath} must not include real subscription tokens`
+  );
+  assert(
+    !/password=(?!MOCK)[^,\s"']+/i.test(source) &&
+      !/"password"\s*:\s*"(?!MOCK)[^"]+"/i.test(source),
+    `${configPath} must not include real node passwords`
+  );
+
+  if (configPath === SING_BOX_CONFIG_PATH) {
+    try {
+      JSON.parse(source);
+    } catch (error) {
+      errors.push(`${configPath} is not valid JSON: ${error.message}`);
+    }
+  }
+}
+
 const urls = [
   ...Object.values(providers).map((provider) => provider.url),
   ...clashGroups.map((group) => group.icon).filter(Boolean),
   ...openClash.remoteRules.map((rule) => rule.url),
   ...loon.remoteRules.map((rule) => rule.url),
+  ...additionalUrls,
 ];
 
 const checks = await Promise.allSettled(urls.map((url) => fetchText(url)));
@@ -124,5 +165,6 @@ console.log(
     `${clashRules.length} rules, ${Object.keys(providers).length} providers) ` +
     `and OpenClash (${openClash.groups.length} groups, ` +
     `${openClash.rules.length} rules, ${openClash.remoteRules.length} remote rulesets), ` +
-    `and Loon (${loon.groups.size} groups, ${loon.remoteRules.length} remote rulesets).`
+    `Loon (${loon.groups.size} groups, ${loon.remoteRules.length} remote rulesets), ` +
+    `and ${additionalConfigs.length} extra client templates.`
 );

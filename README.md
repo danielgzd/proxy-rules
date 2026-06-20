@@ -7,7 +7,7 @@
 
 个人代理工具规则与配置集合，按客户端分类维护。
 
-当前包含 Clash Verge Rev 扩展脚本、OpenClash/subconverter 自定义模板和 Loon 配置模板，后续可继续增加 Shadowrocket 等工具。
+当前包含 Clash Verge Rev、OpenClash/subconverter、Loon、Shadowrocket、Quantumult X 和 sing-box 配置模板。
 
 ## Clash
 
@@ -27,6 +27,21 @@
 
 - [`Loon/Default.lcf`](Loon/Default.lcf)：Loon 精简分流模板，订阅和个人节点均使用 mock 占位。
 - [`Loon/README.md`](Loon/README.md)：替换方法和策略组说明。
+
+## Shadowrocket
+
+- [`Shadowrocket/Default.conf`](Shadowrocket/Default.conf)：Shadowrocket 精简分流模板。
+- [`Shadowrocket/README.md`](Shadowrocket/README.md)：使用说明。
+
+## Quantumult X
+
+- [`QuantumultX/Default.conf`](QuantumultX/Default.conf)：Quantumult X 精简分流模板。
+- [`QuantumultX/README.md`](QuantumultX/README.md)：使用说明。
+
+## sing-box
+
+- [`sing-box/config.json`](sing-box/config.json)：sing-box 精简分流模板。
+- [`sing-box/README.md`](sing-box/README.md)：使用说明。
 
 ## 数据统计
 
@@ -62,9 +77,10 @@
 
 ## 自动化
 
-- `npm run check`：同时验证 `ClashVergeRev.js` 和 `OpenClashFineRouting.ini`。
+- `npm run check`：同时验证 Clash Verge Rev、OpenClash、Loon、Shadowrocket、Quantumult X 和 sing-box 模板。
 - Clash Verge Rev 校验项：脚本结构、策略组引用、规则集引用、图标链接和远程规则链接。
 - OpenClash 校验项：`ruleset` 目标策略组、`custom_proxy_group` 引用闭合、最终兜底和远程规则链接。
+- Loon/Shadowrocket/Quantumult X/sing-box 校验项：远程规则链接、mock 敏感信息、Loon 策略引用和 sing-box JSON 结构。
 - `npm run stats`：统计 Clash Verge Rev 远程规则条目，并把 Clash Verge Rev 与 OpenClash 的策略组、规则数、过滤关键词写入 README 和 `stats.json`。
 - GitHub Actions 会在提交时运行校验，并每天自动刷新统计数据。
 
@@ -75,6 +91,9 @@
 - [Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules)
 - [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat)
 - [blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script)
+- [SagerNet/sing-geosite](https://github.com/SagerNet/sing-geosite)
+- [SagerNet/sing-geoip](https://github.com/SagerNet/sing-geoip)
+- [app2smile/rules](https://github.com/app2smile/rules)
 - [Koolson/Qure](https://github.com/Koolson/Qure)
 
 ## 许可证

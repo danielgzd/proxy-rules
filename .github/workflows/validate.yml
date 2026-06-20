@@ -5,6 +5,9 @@ on:
     paths:
       - "Clash/**"
       - "Loon/**"
+      - "Shadowrocket/**"
+      - "QuantumultX/**"
+      - "sing-box/**"
       - "scripts/**"
       - "package.json"
       - ".github/workflows/**"

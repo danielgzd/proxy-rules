@@ -1,0 +1,350 @@
+{
+  "log": {
+    "level": "info"
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "local",
+        "address": "https://dns.alidns.com/dns-query",
+        "detour": "direct"
+      },
+      {
+        "tag": "remote",
+        "address": "https://dns.google/dns-query",
+        "detour": "节点选择"
+      }
+    ],
+    "final": "local"
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 7897,
+      "sniff": true,
+      "sniff_override_destination": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "AI",
+      "outbounds": ["美国节点", "新加坡节点", "日本节点", "自动选择", "全部节点"]
+    },
+    {
+      "type": "selector",
+      "tag": "节点选择",
+      "outbounds": ["自动选择", "香港节点", "台湾节点", "日本节点", "新加坡节点", "美国节点", "全部节点", "direct"]
+    },
+    {
+      "type": "selector",
+      "tag": "流媒体",
+      "outbounds": ["节点选择", "香港节点", "台湾节点", "日本节点", "新加坡节点", "美国节点", "自动选择", "全部节点"]
+    },
+    {
+      "type": "selector",
+      "tag": "开发服务",
+      "outbounds": ["节点选择", "美国节点", "新加坡节点", "日本节点", "direct", "全部节点"]
+    },
+    {
+      "type": "selector",
+      "tag": "社交媒体",
+      "outbounds": ["节点选择", "日本节点", "新加坡节点", "美国节点", "香港节点", "自动选择", "全部节点"]
+    },
+    {
+      "type": "selector",
+      "tag": "云与软件",
+      "outbounds": ["节点选择", "direct", "香港节点", "日本节点", "新加坡节点", "美国节点", "自动选择"]
+    },
+    {
+      "type": "urltest",
+      "tag": "自动选择",
+      "outbounds": ["MOCK-HYSTERIA2"],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m",
+      "tolerance": 80
+    },
+    {
+      "type": "selector",
+      "tag": "香港节点",
+      "outbounds": ["MOCK-HYSTERIA2"]
+    },
+    {
+      "type": "selector",
+      "tag": "台湾节点",
+      "outbounds": ["MOCK-HYSTERIA2"]
+    },
+    {
+      "type": "selector",
+      "tag": "日本节点",
+      "outbounds": ["MOCK-HYSTERIA2"]
+    },
+    {
+      "type": "selector",
+      "tag": "新加坡节点",
+      "outbounds": ["MOCK-HYSTERIA2"]
+    },
+    {
+      "type": "selector",
+      "tag": "美国节点",
+      "outbounds": ["MOCK-HYSTERIA2"]
+    },
+    {
+      "type": "selector",
+      "tag": "全部节点",
+      "outbounds": ["MOCK-HYSTERIA2"]
+    },
+    {
+      "type": "hysteria2",
+      "tag": "MOCK-HYSTERIA2",
+      "server": "example.com",
+      "server_port": 443,
+      "password": "MOCK_PASSWORD",
+      "tls": {
+        "enabled": true,
+        "server_name": "example.com"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "final": "节点选择",
+    "rules": [
+      {
+        "ip_cidr": [
+          "10.0.0.0/8",
+          "100.64.0.0/10",
+          "127.0.0.0/8",
+          "169.254.0.0/16",
+          "172.16.0.0/12",
+          "192.168.0.0/16"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": ["geosite-private"],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": ["geosite-category-ads-all"],
+        "outbound": "block"
+      },
+      {
+        "domain_suffix": [
+          "deepseek.com",
+          "deepseek.cn",
+          "kimi.moonshot.cn",
+          "moonshot.cn",
+          "doubao.com",
+          "volces.com",
+          "qwen.ai",
+          "tongyi.aliyun.com",
+          "zhipuai.cn",
+          "chatglm.cn",
+          "minimax.chat"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": ["geosite-cn", "geoip-cn"],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": ["geosite-openai", "geosite-google-gemini", "geosite-anthropic", "geosite-github-copilot"],
+        "outbound": "AI"
+      },
+      {
+        "rule_set": ["geosite-youtube", "geosite-netflix", "geosite-disney", "geosite-spotify"],
+        "outbound": "流媒体"
+      },
+      {
+        "rule_set": ["geosite-telegram", "geosite-tiktok", "geosite-twitter"],
+        "outbound": "社交媒体"
+      },
+      {
+        "rule_set": ["geosite-github"],
+        "outbound": "开发服务"
+      },
+      {
+        "rule_set": ["geosite-google", "geosite-microsoft", "geosite-apple"],
+        "outbound": "云与软件"
+      },
+      {
+        "rule_set": ["geosite-geolocation-!cn"],
+        "outbound": "节点选择"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geosite-private",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-private.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-category-ads-all",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geoip-cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-openai",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-openai.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-google-gemini",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google-gemini.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-anthropic",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-anthropic.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-github-copilot",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-github-copilot.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-youtube",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-youtube.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-netflix",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-netflix.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-disney",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-disney.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-spotify",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-spotify.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-telegram",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-telegram.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-tiktok",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-tiktok.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-twitter",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-twitter.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-github",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-github.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-google",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-microsoft",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-microsoft.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-apple",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-apple.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-geolocation-!cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-geolocation-!cn.srs",
+        "download_detour": "direct",
+        "update_interval": "1d"
+      }
+    ]
+  }
+}
