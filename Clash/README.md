@@ -5,7 +5,6 @@
 - 基础分流：[Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules)
 - AI 分流：[MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat)
 - 服务分流：[blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash)
-- OpenClash 补丁：[Aethersailor/Custom_OpenClash_Rules](https://github.com/Aethersailor/Custom_OpenClash_Rules)
 
 规则每天自动更新，本地脚本不再维护大量域名。
 
@@ -34,7 +33,7 @@ Raw 地址：
 https://raw.githubusercontent.com/danielgzd/proxy-rules/main/Clash/OpenClashFineRouting.ini
 ```
 
-这份模板参考了精细分流思路：私网和国内流量优先直连，进入内核后的流量按 AI、流媒体、社交、交易所、开发服务、云与软件等应用类型分流，再用 GFW、非标端口和最终兜底多层接住遗漏。
+这份模板参考了精细分流思路：私网和国内流量优先直连，进入内核后的流量按 AI、流媒体、社交、交易所、开发服务、云与软件等应用类型分流，再用 GFW 和最终兜底接住遗漏。
 
 ## Clash Verge Rev 策略组
 
@@ -55,5 +54,4 @@ https://raw.githubusercontent.com/danielgzd/proxy-rules/main/Clash/OpenClashFine
 - `AI`：海外 AI；国内 AI 使用 `category-ai-cn` 直连。
 - `Telegram`、`流媒体`、`社交媒体`、`交易所`、`开发服务`、`云与软件`：按应用类型选择出口，不直接绑定单个节点。
 - `Adobe`：默认可一键 `REJECT`，也可改为直连或代理。
-- `非标端口`：单独接 OpenClash 端口规则，默认遵循最终兜底。
 - `节点选择`、`自动选择`、`香港节点`、`台湾节点`、`日本节点`、`新加坡节点`、`美国节点`、`冷门节点`、`全部节点`：节点池和兜底出口。

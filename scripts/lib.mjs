@@ -1,16 +1,17 @@
 import fs from "node:fs";
 import vm from "node:vm";
 
-export const CONFIG_PATH = "Clash/ClashVergeRev.js";
+export const CLASH_VERGE_CONFIG_PATH = "Clash/ClashVergeRev.js";
+export const OPENCLASH_CONFIG_PATH = "Clash/OpenClashFineRouting.ini";
 
-export function loadConfig() {
-  const source = fs.readFileSync(CONFIG_PATH, "utf8");
+export function loadClashVergeConfig() {
+  const source = fs.readFileSync(CLASH_VERGE_CONFIG_PATH, "utf8");
   const context = {};
   vm.createContext(context);
-  vm.runInContext(source, context, { filename: CONFIG_PATH });
+  vm.runInContext(source, context, { filename: CLASH_VERGE_CONFIG_PATH });
 
   if (typeof context.main !== "function") {
-    throw new Error(`${CONFIG_PATH} does not expose main(config)`);
+    throw new Error(`${CLASH_VERGE_CONFIG_PATH} does not expose main(config)`);
   }
 
   const config = context.main({
@@ -26,6 +27,52 @@ export function loadConfig() {
   });
 
   return { config, source };
+}
+
+export function loadConfig() {
+  return loadClashVergeConfig();
+}
+
+export function loadOpenClashConfig() {
+  const source = fs.readFileSync(OPENCLASH_CONFIG_PATH, "utf8");
+  return { config: parseOpenClashIni(source), source };
+}
+
+export function parseOpenClashIni(source) {
+  const groups = [];
+  const rules = [];
+  const remoteRules = [];
+  const exclude = source.match(/^exclude=(.+)$/m)?.[1] || "";
+
+  for (const rawLine of source.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith(";")) continue;
+
+    if (line.startsWith("ruleset=")) {
+      const body = line.slice("ruleset=".length);
+      const [target, ...rest] = body.split(",");
+      const rule = { target, body };
+      const urlMatch = rest.join(",").match(/https?:\/\/[^,\s`]+/);
+      if (urlMatch) {
+        rule.url = urlMatch[0];
+        const typeMatch = rest.join(",").match(/^(clash-[^:]+):/);
+        rule.behavior = typeMatch?.[1] || "remote";
+        remoteRules.push(rule);
+      }
+      rules.push(rule);
+    }
+
+    if (line.startsWith("custom_proxy_group=")) {
+      const body = line.slice("custom_proxy_group=".length);
+      const [name, type, ...parts] = body.split("`");
+      const proxies = parts
+        .filter((part) => part.startsWith("[]"))
+        .map((part) => part.slice(2));
+      groups.push({ name, type, proxies });
+    }
+  }
+
+  return { exclude, groups, remoteRules, rules };
 }
 
 export async function fetchText(url) {

@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-06-19T08:42:07.173Z",
+  "updatedAt": "2026-06-20T03:45:53.732Z",
   "groups": 9,
   "routingRules": 13,
   "providers": 12,
-  "remoteRules": 312886,
+  "remoteRules": 313545,
   "filterKeywords": 58,
   "providerStats": {
     "applications": {
@@ -17,17 +17,17 @@
       "source": "cdn.jsdelivr.net"
     },
     "reject": {
-      "rules": 166285,
+      "rules": 166925,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
     "direct": {
-      "rules": 112653,
+      "rules": 112593,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
     "proxy": {
-      "rules": 26737,
+      "rules": 26766,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
@@ -37,7 +37,7 @@
       "source": "cdn.jsdelivr.net"
     },
     "cncidr": {
-      "rules": 5711,
+      "rules": 5761,
       "behavior": "ipcidr",
       "source": "cdn.jsdelivr.net"
     },
@@ -65,6 +65,23 @@
       "rules": 31,
       "behavior": "classical",
       "source": "raw.githubusercontent.com"
+    }
+  },
+  "configs": {
+    "clashVergeRev": {
+      "groups": 9,
+      "routingRules": 13,
+      "providers": 12,
+      "remoteRules": 313545,
+      "filterKeywords": 58
+    },
+    "openClash": {
+      "groups": 18,
+      "routingRules": 38,
+      "remoteRulesets": 0,
+      "remoteRules": 0,
+      "filterKeywords": 33,
+      "providerStats": {}
     }
   }
 }

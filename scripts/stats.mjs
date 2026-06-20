@@ -1,13 +1,19 @@
 import fs from "node:fs";
-import { countPayloadEntries, fetchText, loadConfig } from "./lib.mjs";
+import {
+  countPayloadEntries,
+  fetchText,
+  loadClashVergeConfig,
+  loadOpenClashConfig,
+} from "./lib.mjs";
 
 const README_PATH = "README.md";
 const STATS_PATH = "stats.json";
 const START = "<!-- STATS:START -->";
 const END = "<!-- STATS:END -->";
 
-const { config, source } = loadConfig();
-const providers = config["rule-providers"];
+const { config: clashVerge, source } = loadClashVergeConfig();
+const { config: openClash } = loadOpenClashConfig();
+const providers = clashVerge["rule-providers"];
 const providerStats = {};
 
 for (const [name, provider] of Object.entries(providers)) {
@@ -29,10 +35,25 @@ const filterKeywords = keywordMatch
   : 0;
 
 const now = new Date();
+const openClashRemoteStats = {};
+for (const rule of openClash.remoteRules) {
+  const content = await fetchText(rule.url);
+  const key = new URL(rule.url).pathname.split("/").pop().replace(/\.yaml$/, "");
+  openClashRemoteStats[key] = {
+    rules: countPayloadEntries(content),
+    behavior: rule.behavior,
+    source: new URL(rule.url).hostname,
+  };
+}
+
+const openClashFilterKeywords = openClash.exclude
+  .split("|")
+  .filter(Boolean).length;
+
 const stats = {
   updatedAt: now.toISOString(),
-  groups: config["proxy-groups"].length,
-  routingRules: config.rules.length,
+  groups: clashVerge["proxy-groups"].length,
+  routingRules: clashVerge.rules.length,
   providers: Object.keys(providers).length,
   remoteRules: Object.values(providerStats).reduce(
     (total, provider) => total + provider.rules,
@@ -40,6 +61,29 @@ const stats = {
   ),
   filterKeywords,
   providerStats,
+  configs: {
+    clashVergeRev: {
+      groups: clashVerge["proxy-groups"].length,
+      routingRules: clashVerge.rules.length,
+      providers: Object.keys(providers).length,
+      remoteRules: Object.values(providerStats).reduce(
+        (total, provider) => total + provider.rules,
+        0
+      ),
+      filterKeywords,
+    },
+    openClash: {
+      groups: openClash.groups.length,
+      routingRules: openClash.rules.length,
+      remoteRulesets: openClash.remoteRules.length,
+      remoteRules: Object.values(openClashRemoteStats).reduce(
+        (total, provider) => total + provider.rules,
+        0
+      ),
+      filterKeywords: openClashFilterKeywords,
+      providerStats: openClashRemoteStats,
+    },
+  },
 };
 
 fs.writeFileSync(STATS_PATH, `${JSON.stringify(stats, null, 2)}\n`);
@@ -52,12 +96,13 @@ const table = Object.entries(providerStats)
   .join("\n");
 
 const block = `${START}
-| 策略组 | 路由规则 | 远程规则集 | 收录规则 | 过滤关键词 |
-| ---: | ---: | ---: | ---: | ---: |
-| ${stats.groups} | ${stats.routingRules} | ${stats.providers} | ${stats.remoteRules.toLocaleString("en-US")} | ${stats.filterKeywords} |
+| 配置 | 策略组 | 路由规则 | 远程规则集 | 收录规则 | 过滤关键词 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Clash Verge Rev | ${stats.configs.clashVergeRev.groups} | ${stats.configs.clashVergeRev.routingRules} | ${stats.configs.clashVergeRev.providers} | ${stats.configs.clashVergeRev.remoteRules.toLocaleString("en-US")} | ${stats.configs.clashVergeRev.filterKeywords} |
+| OpenClash | ${stats.configs.openClash.groups} | ${stats.configs.openClash.routingRules} | ${stats.configs.openClash.remoteRulesets} | ${stats.configs.openClash.remoteRules.toLocaleString("en-US")} | ${stats.configs.openClash.filterKeywords} |
 
 <details>
-<summary>查看各规则集统计</summary>
+<summary>查看 Clash Verge Rev 规则集统计</summary>
 
 | 规则集 | 类型 | 条目数 |
 | --- | --- | ---: |

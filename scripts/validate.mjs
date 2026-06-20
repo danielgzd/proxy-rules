@@ -1,43 +1,75 @@
-import { fetchText, loadConfig } from "./lib.mjs";
+import {
+  OPENCLASH_CONFIG_PATH,
+  fetchText,
+  loadClashVergeConfig,
+  loadOpenClashConfig,
+} from "./lib.mjs";
 
-const { config } = loadConfig();
 const errors = [];
 
 function assert(condition, message) {
   if (!condition) errors.push(message);
 }
 
-const groups = config["proxy-groups"] || [];
-const providers = config["rule-providers"] || {};
-const rules = config.rules || [];
-const groupNames = new Set(groups.map((group) => group.name));
+const { config: clashVerge } = loadClashVergeConfig();
+const clashGroups = clashVerge["proxy-groups"] || [];
+const providers = clashVerge["rule-providers"] || {};
+const clashRules = clashVerge.rules || [];
+const clashGroupNames = new Set(clashGroups.map((group) => group.name));
 
-assert(config.mode === "rule", "mode must be rule");
-assert(groups.length > 0, "proxy-groups must not be empty");
-assert(rules.at(-1) === "MATCH,节点选择", "MATCH must be the final rule");
-assert(!groupNames.has("机场策略"), "airport proxy groups must be replaced");
+assert(clashVerge.mode === "rule", "mode must be rule");
+assert(clashGroups.length > 0, "proxy-groups must not be empty");
+assert(clashRules.at(-1) === "MATCH,节点选择", "MATCH must be the final rule");
+assert(!clashGroupNames.has("机场策略"), "airport proxy groups must be replaced");
 assert(!providers.airport, "airport rule providers must be replaced");
 
-for (const group of groups) {
+for (const group of clashGroups) {
   assert(Boolean(group.icon), `${group.name} is missing an icon`);
   for (const target of group.proxies || []) {
     if (target === "DIRECT") continue;
-    assert(groupNames.has(target), `${group.name} references unknown group: ${target}`);
+    assert(
+      clashGroupNames.has(target),
+      `${group.name} references unknown group: ${target}`
+    );
   }
 }
 
-for (const rule of rules) {
+for (const rule of clashRules) {
   const [type, providerName, target] = rule.split(",");
   if (type !== "RULE-SET") continue;
   assert(Boolean(providers[providerName]), `missing provider: ${providerName}`);
   if (!["DIRECT", "REJECT"].includes(target)) {
-    assert(groupNames.has(target), `rule references unknown group: ${target}`);
+    assert(clashGroupNames.has(target), `rule references unknown group: ${target}`);
+  }
+}
+
+const { config: openClash } = loadOpenClashConfig();
+const openClashGroupNames = new Set(openClash.groups.map((group) => group.name));
+const builtIns = new Set(["DIRECT", "REJECT"]);
+
+assert(openClash.groups.length > 0, `${OPENCLASH_CONFIG_PATH} has no groups`);
+assert(openClash.rules.at(-1)?.target === "漏网之鱼", "OpenClash FINAL must use 漏网之鱼");
+
+for (const rule of openClash.rules) {
+  assert(
+    builtIns.has(rule.target) || openClashGroupNames.has(rule.target),
+    `OpenClash ruleset target missing group: ${rule.target}`
+  );
+}
+
+for (const group of openClash.groups) {
+  for (const target of group.proxies) {
+    assert(
+      builtIns.has(target) || openClashGroupNames.has(target),
+      `OpenClash ${group.name} references unknown group: ${target}`
+    );
   }
 }
 
 const urls = [
   ...Object.values(providers).map((provider) => provider.url),
-  ...groups.map((group) => group.icon).filter(Boolean),
+  ...clashGroups.map((group) => group.icon).filter(Boolean),
+  ...openClash.remoteRules.map((rule) => rule.url),
 ];
 
 const checks = await Promise.allSettled(urls.map((url) => fetchText(url)));
@@ -53,6 +85,8 @@ if (errors.length) {
 }
 
 console.log(
-  `Validated ${groups.length} groups, ${rules.length} rules, ` +
-    `${Object.keys(providers).length} providers and ${urls.length} remote URLs.`
+  `Validated Clash Verge Rev (${clashGroups.length} groups, ` +
+    `${clashRules.length} rules, ${Object.keys(providers).length} providers) ` +
+    `and OpenClash (${openClash.groups.length} groups, ` +
+    `${openClash.rules.length} rules, ${openClash.remoteRules.length} remote rulesets).`
 );

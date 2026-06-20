@@ -28,29 +28,30 @@
 以下数据由 [`scripts/stats.mjs`](scripts/stats.mjs) 每日自动生成。
 
 <!-- STATS:START -->
-| 策略组 | 路由规则 | 远程规则集 | 收录规则 | 过滤关键词 |
-| ---: | ---: | ---: | ---: | ---: |
-| 9 | 13 | 12 | 312,886 | 58 |
+| 配置 | 策略组 | 路由规则 | 远程规则集 | 收录规则 | 过滤关键词 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Clash Verge Rev | 9 | 13 | 12 | 313,545 | 58 |
+| OpenClash | 18 | 38 | 0 | 0 | 33 |
 
 <details>
-<summary>查看各规则集统计</summary>
+<summary>查看 Clash Verge Rev 规则集统计</summary>
 
 | 规则集 | 类型 | 条目数 |
 | --- | --- | ---: |
 | `applications` | classical | 96 |
 | `private` | domain | 130 |
-| `reject` | domain | 166,285 |
-| `direct` | domain | 112,653 |
-| `proxy` | domain | 26,737 |
+| `reject` | domain | 166,925 |
+| `direct` | domain | 112,593 |
+| `proxy` | domain | 26,766 |
 | `lancidr` | ipcidr | 18 |
-| `cncidr` | ipcidr | 5,711 |
+| `cncidr` | ipcidr | 5,761 |
 | `telegramcidr` | ipcidr | 12 |
 | `ai-cn` | domain | 102 |
 | `ai` | domain | 158 |
 | `global-media` | classical | 953 |
 | `github` | classical | 31 |
 
-统计更新时间：2026-06-19 08:42:07 UTC
+统计更新时间：2026-06-20 03:45:53 UTC
 </details>
 <!-- STATS:END -->
 
@@ -65,7 +66,6 @@
 - [Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules)
 - [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat)
 - [blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script)
-- [Aethersailor/Custom_OpenClash_Rules](https://github.com/Aethersailor/Custom_OpenClash_Rules)
 - [Koolson/Qure](https://github.com/Koolson/Qure)
 
 ## 许可证
