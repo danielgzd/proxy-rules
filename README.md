@@ -7,7 +7,7 @@
 
 个人代理工具规则与配置集合，按客户端分类维护。
 
-当前包含 Clash Verge Rev，后续可继续增加 Loon、Shadowrocket 等工具。
+当前包含 Clash Verge Rev 扩展脚本和 OpenClash/subconverter 自定义模板，后续可继续增加 Loon、Shadowrocket 等工具。
 
 ## Clash
 
@@ -57,9 +57,13 @@
 
 ## 自动化
 
-- `npm run check`：验证脚本结构、策略引用、图标及远程规则链接。
-- `npm run stats`：统计远程规则条目并更新 README 和 `stats.json`。
-- GitHub Actions 会在提交时校验，并每天自动刷新统计数据。
+- `npm run check`：同时验证 `ClashVergeRev.js` 和 `OpenClashFineRouting.ini`。
+- Clash Verge Rev 校验项：脚本结构、策略组引用、规则集引用、图标链接和远程规则链接。
+- OpenClash 校验项：`ruleset` 目标策略组、`custom_proxy_group` 引用闭合、最终兜底和远程规则链接。
+- `npm run stats`：统计 Clash Verge Rev 远程规则条目，并把 Clash Verge Rev 与 OpenClash 的策略组、规则数、过滤关键词写入 README 和 `stats.json`。
+- GitHub Actions 会在提交时运行校验，并每天自动刷新统计数据。
+
+如果 OpenClash 模板新增 `clash-domain` 或 `clash-classic` 远程规则，`npm run check` 会验证链接可访问，`npm run stats` 会把对应条目计入 OpenClash 统计。
 
 ## 规则来源
 
