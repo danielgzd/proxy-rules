@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-07-09T08:01:49.957Z",
+  "updatedAt": "2026-07-10T06:56:30.761Z",
   "groups": 9,
   "routingRules": 13,
   "providers": 12,
-  "remoteRules": 310499,
+  "remoteRules": 311167,
   "filterKeywords": 58,
   "providerStats": {
     "applications": {
-      "rules": 96,
+      "rules": 98,
       "behavior": "classical",
       "source": "cdn.jsdelivr.net"
     },
@@ -17,7 +17,7 @@
       "source": "cdn.jsdelivr.net"
     },
     "reject": {
-      "rules": 164070,
+      "rules": 164736,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
@@ -72,7 +72,7 @@
       "groups": 9,
       "routingRules": 13,
       "providers": 12,
-      "remoteRules": 310499,
+      "remoteRules": 311167,
       "filterKeywords": 58
     },
     "openClash": {
