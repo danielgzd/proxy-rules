@@ -71,7 +71,7 @@
 | `global-media` | classical | 953 |
 | `github` | classical | 31 |
 
-统计更新时间：2026-08-30 09:18:05 UTC
+统计更新时间：2026-08-31 09:51:08 UTC
 </details>
 <!-- STATS:END -->
 
