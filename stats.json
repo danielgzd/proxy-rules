@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-09-09T08:12:54.358Z",
+  "updatedAt": "2026-09-10T08:12:26.696Z",
   "groups": 9,
   "routingRules": 13,
   "providers": 12,
-  "remoteRules": 335806,
+  "remoteRules": 335807,
   "filterKeywords": 58,
   "providerStats": {
     "applications": {
@@ -27,7 +27,7 @@
       "source": "cdn.jsdelivr.net"
     },
     "proxy": {
-      "rules": 27086,
+      "rules": 27087,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
@@ -72,7 +72,7 @@
       "groups": 9,
       "routingRules": 13,
       "providers": 12,
-      "remoteRules": 335806,
+      "remoteRules": 335807,
       "filterKeywords": 58
     },
     "openClash": {
