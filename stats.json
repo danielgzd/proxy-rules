@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-26T09:02:52.590Z",
+  "updatedAt": "2026-10-27T09:06:05.139Z",
   "groups": 9,
   "routingRules": 13,
   "providers": 12,
-  "remoteRules": 349688,
+  "remoteRules": 349692,
   "filterKeywords": 58,
   "providerStats": {
     "applications": {
@@ -47,12 +47,12 @@
       "source": "cdn.jsdelivr.net"
     },
     "ai-cn": {
-      "rules": 115,
+      "rules": 116,
       "behavior": "domain",
       "source": "raw.githubusercontent.com"
     },
     "ai": {
-      "rules": 204,
+      "rules": 207,
       "behavior": "domain",
       "source": "raw.githubusercontent.com"
     },
@@ -72,7 +72,7 @@
       "groups": 9,
       "routingRules": 13,
       "providers": 12,
-      "remoteRules": 349688,
+      "remoteRules": 349692,
       "filterKeywords": 58
     },
     "openClash": {
