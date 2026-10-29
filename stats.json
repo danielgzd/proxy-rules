@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-28T09:46:46.903Z",
+  "updatedAt": "2026-10-29T10:05:35.048Z",
   "groups": 9,
   "routingRules": 13,
   "providers": 12,
-  "remoteRules": 342723,
+  "remoteRules": 343386,
   "filterKeywords": 58,
   "providerStats": {
     "applications": {
@@ -17,17 +17,17 @@
       "source": "cdn.jsdelivr.net"
     },
     "reject": {
-      "rules": 193578,
+      "rules": 193916,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
     "direct": {
-      "rules": 110243,
+      "rules": 110560,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
     "proxy": {
-      "rules": 27308,
+      "rules": 27316,
       "behavior": "domain",
       "source": "cdn.jsdelivr.net"
     },
@@ -72,7 +72,7 @@
       "groups": 9,
       "routingRules": 13,
       "providers": 12,
-      "remoteRules": 342723,
+      "remoteRules": 343386,
       "filterKeywords": 58
     },
     "openClash": {
