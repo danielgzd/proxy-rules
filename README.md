@@ -50,7 +50,7 @@
 <!-- STATS:START -->
 | 配置 | 策略组 | 路由规则 | 远程规则集 | 收录规则 | 过滤关键词 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Clash Verge Rev | 9 | 13 | 12 | 353,263 | 58 |
+| Clash Verge Rev | 9 | 13 | 12 | 353,663 | 58 |
 | OpenClash | 18 | 38 | 0 | 0 | 33 |
 
 <details>
@@ -60,9 +60,9 @@
 | --- | --- | ---: |
 | `applications` | classical | 98 |
 | `private` | domain | 132 |
-| `reject` | domain | 204,388 |
+| `reject` | domain | 204,783 |
 | `direct` | domain | 110,250 |
-| `proxy` | domain | 27,288 |
+| `proxy` | domain | 27,293 |
 | `lancidr` | ipcidr | 28 |
 | `cncidr` | ipcidr | 9,735 |
 | `telegramcidr` | ipcidr | 12 |
@@ -71,7 +71,7 @@
 | `global-media` | classical | 953 |
 | `github` | classical | 31 |
 
-统计更新时间：2026-11-27 12:36:07 UTC
+统计更新时间：2026-11-28 11:55:04 UTC
 </details>
 <!-- STATS:END -->
 
